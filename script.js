@@ -1,5 +1,5 @@
 // ---------- CONFIG ----------
-const backendUrl = "https://asesor-backend.onrender.com"; 
+const backendUrl = ""; 
 // <-- cambia esto por la URL que Replit te dé (o deja vacío para usar solo la KB local: "")
 
 // ---------- ELEMENTOS ----------
@@ -140,4 +140,5 @@ userInput.addEventListener("keypress", function(e){
 window.addEventListener("load", () => {
   resetChat();
 });
+
 
