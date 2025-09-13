@@ -1,7 +1,7 @@
 // ---------- CONFIG ----------
 // 👇 Cambia esta URL por la de tu backend en Render cuando lo tengas.
 // Ejemplo: "https://mi-backend.onrender.com/ask"
-const backendUrl = ""; 
+const backendUrl = "https://asesor-backend.onrender.com"; 
 
 // ---------- ELEMENTOS ----------
 const chatBox = document.getElementById("chat-box");
@@ -126,4 +126,5 @@ sendBtn.addEventListener("click", sendMessage);
 resetBtn.addEventListener("click", resetChat);
 userInput.addEventListener("keypress", e => { if(e.key === "Enter") sendMessage(); });
 window.addEventListener("load", resetChat);
+
 
