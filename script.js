@@ -1,6 +1,7 @@
 // ---------- CONFIG ----------
-const backendUrl = "/ask"; 
-// <-- cambia esto por la URL que Replit te dé (o deja vacío para usar solo la KB local: "")
+// 👇 Cambia esta URL por la de tu backend en Render cuando lo tengas.
+// Ejemplo: "https://mi-backend.onrender.com/ask"
+const backendUrl = ""; 
 
 // ---------- ELEMENTOS ----------
 const chatBox = document.getElementById("chat-box");
@@ -15,14 +16,14 @@ const localResponses = {
   "embargo": "⚠️ Un embargo solo puede realizarse con una orden judicial. Nadie puede entrar a tu casa sin una orden de un juez.",
   "demanda": "⚖️ Si recibiste una demanda civil, lo ideal es acudir con un abogado o solicitar apoyo gratuito en CONDUSEF: 55 5340 0999 o 800 824 4722.",
   "bienes": "🏠 Los bienes de terceros no pueden ser embargados sin prueba. Ten facturas o contratos que acrediten propiedad.",
-  "carcel": "🚫 En general, en México no existe cárcel por deudas civiles; si te amenazan con eso, denúncialo. (Hay excepciones muy puntuales en casos penales o incumplimiento de obligaciones judiciales).",
-  "cartas": "📄 Puedo darte modelos: convenio, prórroga, o carta de no propiedad. Escribe 'cartas' para verlos."
+  "carcel": "🚫 En general, en México no existe cárcel por deudas civiles.",
+  "cartas": "📄 Aquí tienes modelos de cartas. Selecciona la que necesites:"
 };
 
 const letters = {
-  "convenio": "Estimado (a):\n\nPropongo un convenio de pago acorde a mis posibilidades para saldar la deuda en plazos mensuales de [monto] durante [número] meses...\n\nAtentamente,\n[Nombre]",
-  "prorroga": "Estimado (a):\n\nSolicito prórroga por [motivo] y me comprometo a pagar a partir de [fecha]...\n\nAtentamente,\n[Nombre]",
-  "no-propiedad": "A quien corresponda:\n\nHago constar que los bienes dentro del domicilio señalado no son propiedad del deudor, sino de terceros, por lo que solicito respetar su derecho de propiedad.\n\nAtentamente,\n[Nombre]"
+  "convenio": "Estimado (a):\n\nPropongo un convenio de pago acorde a mis posibilidades...",
+  "prorroga": "Estimado (a):\n\nSolicito prórroga por [motivo] y me comprometo a pagar a partir de [fecha]...",
+  "no-propiedad": "A quien corresponda:\n\nHago constar que los bienes dentro del domicilio señalado no son propiedad del deudor..."
 };
 
 // ---------- UTILIDADES UI ----------
@@ -35,7 +36,6 @@ function addMessage(html, className="bot-message"){
 }
 
 function setAdvisorMood(mood){
-  // espera que tengas las imágenes dentro de /assets/
   if(mood === "thinking") advisorImg.src = "assets/advisor-thinking.png";
   else if(mood === "worried") advisorImg.src = "assets/advisor-worried.png";
   else advisorImg.src = "assets/advisor-happy.png";
@@ -48,49 +48,37 @@ async function sendMessage(){
   addMessage(escapeHtml(text), "user-message");
   userInput.value = "";
 
-  // UI: asesor pensando
   advisorStatus.textContent = "🤔 Estoy pensando en cómo ayudarte...";
   setAdvisorMood("thinking");
 
-  // intenta backend si está configurado
-  if(backendUrl && backendUrl.startsWith("http")){
-    try {
-      const res = await fetch(backendUrl, {
-        method: "POST",
-        headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({ question: text })
-      });
-      const data = await res.json();
-      addMessage(data.answer, "bot-message");
-      advisorStatus.textContent = "🙂 Aquí tienes lo que encontré.";
-      setAdvisorMood("happy");
-      return;
-    } catch (err) {
-      // sigue al fallback local
-      console.warn("No se pudo conectar al backend, usando KB local.", err);
-    }
+  // Fallback local
+  const low = text.toLowerCase();
+  if(low.includes("carta") || low.includes("cartas")){
+    addMessage(localResponses.cartas, "bot-message");
+    addMessage(`
+      <div class="suggestions">
+        <button onclick="showLetter('convenio')">✍️ Convenio</button>
+        <button onclick="showLetter('prorroga')">🕒 Prórroga</button>
+        <button onclick="showLetter('no-propiedad')">🚪 No propiedad</button>
+      </div>`, "bot-message");
+    advisorStatus.textContent = "✍️ Selecciona la carta que necesites.";
+    setAdvisorMood("happy");
+    return;
   }
 
-  // Fallback local: busca coincidencias simples
-  const low = text.toLowerCase();
+  // Resto de respuestas
   let found = null;
   if(low.includes("embargo")) found = localResponses.embargo;
   else if(low.includes("demanda")) found = localResponses.demanda;
-  else if(low.includes("bien") || low.includes("tercero")) found = localResponses.bienes;
-  else if(low.includes("carcel") || low.includes("cárcel") || low.includes("preso") || low.includes("prision")) found = localResponses.carcel;
-  else if(low.includes("carta") || low.includes("cartas")) found = localResponses.cartas;
+  else if(low.includes("bien")) found = localResponses.bienes;
+  else if(low.includes("carcel") || low.includes("cárcel")) found = localResponses.carcel;
 
   if(!found){
-    found = "🙂 Gracias por tu consulta. Puedes preguntar sobre: embargo, demanda, bienes de terceros, cárcel o pedir cartas modelo.";
+    found = "🙂 Gracias por tu consulta. Pregunta sobre: embargo, demanda, bienes, cárcel o cartas modelo.";
   }
   addMessage(found, "bot-message");
   advisorStatus.textContent = "🙂 Estoy aquí para ayudarte.";
   setAdvisorMood("happy");
-}
-
-function sendSuggestion(text){
-  userInput.value = text;
-  sendMessage();
 }
 
 function showLetter(type){
@@ -111,18 +99,22 @@ function addWelcome(){
   const welcome = `
     👋 ¡Bienvenido! Soy tu asesor especializado en deudas civiles en México ⚖️.
     <div style="margin-top:8px;">
-      Selecciona una sugerencia para comenzar:
+      Selecciona una sugerencia:
       <div class="suggestions">
-        <button onclick="sendSuggestion('¿Qué hago si recibo una notificación de embargo?')">⚠️ Embargo</button>
-        <button onclick="sendSuggestion('¿Pueden meterme a la cárcel por no pagar?')">🚫 Cárcel</button>
-        <button onclick="sendSuggestion('¿Cómo redacto una carta de convenio?')">✍️ Carta de convenio</button>
-        <button onclick="sendSuggestion('Cartas')">📄 Ver cartas</button>
+        <button onclick="sendSuggestion('embargo')">⚠️ Embargo</button>
+        <button onclick="sendSuggestion('carcel')">🚫 Cárcel</button>
+        <button onclick="sendSuggestion('convenio')">✍️ Carta de convenio</button>
+        <button onclick="sendSuggestion('cartas')">📄 Ver cartas</button>
       </div>
     </div>`;
   addMessage(welcome, "bot-message");
 }
 
-// Escape básico para evitar inyección accidental
+function sendSuggestion(text){
+  userInput.value = text;
+  sendMessage();
+}
+
 function escapeHtml(str){
   return str.replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
@@ -132,11 +124,6 @@ function escapeHtml(str){
 // ---------- EVENTOS ----------
 sendBtn.addEventListener("click", sendMessage);
 resetBtn.addEventListener("click", resetChat);
-userInput.addEventListener("keypress", function(e){
-  if(e.key === "Enter") sendMessage();
-});
+userInput.addEventListener("keypress", e => { if(e.key === "Enter") sendMessage(); });
+window.addEventListener("load", resetChat);
 
-// al cargar
-window.addEventListener("load", () => {
-  resetChat();
-});
