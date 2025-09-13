@@ -1,7 +1,6 @@
 // ---------- CONFIG ----------
 const backendUrl = "https://asesor-backend.onrender.com/laws"; 
 // <-- cambia esto por la URL que Replit te dé (o deja vacío para usar solo la KB local: "")
-
 console.log("script.js cargado"); // para confirmar que el archivo corre
 
 // ---------- ELEMENTOS ----------
@@ -26,166 +25,25 @@ const letters = {
   "prorroga": "Estimado (a):\n\nSolicito prórroga por [motivo] y me comprometo a pagar a partir de [fecha]...\n\nAtentamente,\n[Nombre]",
   "no-propiedad": "A quien corresponda:\n\nHago constar que los bienes dentro del domicilio señalado no son propiedad del deudor, sino de terceros, por lo que solicito respetar su derecho de propiedad.\n\nAtentamente,\n[Nombre]"
 };
-// Función que crea un elemento 'details' (colapsable) por cada carta
-function crearCarta(titulo, texto) {
-  const details = document.createElement('details');
-  const summary = document.createElement('summary');
-  summary.textContent = titulo;
-  const p = document.createElement('p');
-  p.textContent = texto;
-  details.appendChild(summary);
-  details.appendChild(p);
-  details.classList.add('mi-carta');
-  return details;
-}
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Asesor - cartas</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main>
+    <h1>Cartas del Asesor</h1>
+    <div id="cardsContainer"></div>
+  </main>
 
-// Renderiza cartas desde un array
-function renderizarCartas(cartas) {
-  const cont = document.getElementById('cardsContainer');
-  cont.innerHTML = ''; // limpiar
-  cartas.forEach(c => cont.appendChild(crearCarta(c.titulo, c.texto)));
-}
+  <!-- Cargar script con defer para que espere al DOM -->
+  <script src="script.js" defer></script>
+</body>
+</html>
 
-// Si usas un JSON remoto (/laws), primero intenta traerlo; si falla, usa MIS_CARTAS
-async function cargarYCargarCartas() {
-  try {
-    // Cambia esta URL por la de tu backend en Render
-    const url = 'https://TU_BACKEND.onrender.com/laws';
-    const resp = await fetch(url);
-    if (!resp.ok) throw new Error('no response from backend');
-    const data = await resp.json();
-    // Suponiendo que data es un array de objetos con {titulo, texto}
-    if (Array.isArray(data) && data.length) {
-      renderizarCartas(data);
-      return;
-    }
-    // si no tiene estructura esperada, cae al fallback
-  } catch (err) {
-    console.warn('No se pudo traer /laws, uso cartas locales:', err);
-  }
-  // fallback local
-  renderizarCartas(MIS_CARTAS);
-}
-
-// Ejecutar al cargar el DOM
-document.addEventListener('DOMContentLoaded', () => {
-  cargarYCargarCartas();
-});
-// ---------- UTILIDADES UI ----------
-function addMessage(html, className="bot-message"){
-  const msg = document.createElement("div");
-  msg.className = className;
-  msg.innerHTML = html;
-  chatBox.appendChild(msg);
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-function setAdvisorMood(mood){
-  // espera que tengas las imágenes dentro de /assets/
-  if(mood === "thinking") advisorImg.src = "assets/advisor-thinking.png";
-  else if(mood === "worried") advisorImg.src = "assets/advisor-worried.png";
-  else advisorImg.src = "assets/advisor-happy.png";
-}
-
-// ---------- HANDLERS ----------
-async function sendMessage(){
-  const text = userInput.value.trim();
-  if(!text) return;
-  addMessage(escapeHtml(text), "user-message");
-  userInput.value = "";
-
-  // UI: asesor pensando
-  advisorStatus.textContent = "🤔 Estoy pensando en cómo ayudarte...";
-  setAdvisorMood("thinking");
-
-  // intenta backend si está configurado
-  if(backendUrl && backendUrl.startsWith("http")){
-    try {
-      const res = await fetch(backendUrl, {
-        method: "POST",
-        headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({ question: text })
-      });
-      const data = await res.json();
-      addMessage(data.answer, "bot-message");
-      advisorStatus.textContent = "🙂 Aquí tienes lo que encontré.";
-      setAdvisorMood("happy");
-      return;
-    } catch (err) {
-      // sigue al fallback local
-      console.warn("No se pudo conectar al backend, usando KB local.", err);
-    }
-  }
-
-  // Fallback local: busca coincidencias simples
-  const low = text.toLowerCase();
-  let found = null;
-  if(low.includes("embargo")) found = localResponses.embargo;
-  else if(low.includes("demanda")) found = localResponses.demanda;
-  else if(low.includes("bien") || low.includes("tercero")) found = localResponses.bienes;
-  else if(low.includes("carcel") || low.includes("cárcel") || low.includes("preso") || low.includes("prision")) found = localResponses.carcel;
-  else if(low.includes("carta") || low.includes("cartas")) found = localResponses.cartas;
-
-  if(!found){
-    found = "🙂 Gracias por tu consulta. Puedes preguntar sobre: embargo, demanda, bienes de terceros, cárcel o pedir cartas modelo.";
-  }
-  addMessage(found, "bot-message");
-  advisorStatus.textContent = "🙂 Estoy aquí para ayudarte.";
-  setAdvisorMood("happy");
-}
-
-function sendSuggestion(text){
-  userInput.value = text;
-  sendMessage();
-}
-
-function showLetter(type){
-  const letter = letters[type] || "No encontré esa carta.";
-  addMessage("📄 Texto sugerido:<br><pre>" + escapeHtml(letter) + "</pre>", "bot-message");
-  advisorStatus.textContent = "✍️ Aquí está la carta modelo.";
-  setAdvisorMood("happy");
-}
-
-function resetChat(){
-  chatBox.innerHTML = "";
-  advisorStatus.textContent = "🙂 Hola, soy tu asesor virtual. Estoy aquí para ayudarte.";
-  setAdvisorMood("happy");
-  addWelcome();
-}
-
-function addWelcome(){
-  const welcome = `
-    👋 ¡Bienvenido! Soy tu asesor especializado en deudas civiles en México ⚖️.
-    <div style="margin-top:8px;">
-      Selecciona una sugerencia para comenzar:
-      <div class="suggestions">
-        <button onclick="sendSuggestion('¿Qué hago si recibo una notificación de embargo?')">⚠️ Embargo</button>
-        <button onclick="sendSuggestion('¿Pueden meterme a la cárcel por no pagar?')">🚫 Cárcel</button>
-        <button onclick="sendSuggestion('¿Cómo redacto una carta de convenio?')">✍️ Carta de convenio</button>
-        <button onclick="sendSuggestion('Cartas')">📄 Ver cartas</button>
-      </div>
-    </div>`;
-  addMessage(welcome, "bot-message");
-}
-
-// Escape básico para evitar inyección accidental
-function escapeHtml(str){
-  return str.replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;");
-}
-
-// ---------- EVENTOS ----------
-sendBtn.addEventListener("click", sendMessage);
-resetBtn.addEventListener("click", resetChat);
-userInput.addEventListener("keypress", function(e){
-  if(e.key === "Enter") sendMessage();
-});
-
-// al cargar
-window.addEventListener("load", () => {
-  resetChat();
-});
 
 
 
