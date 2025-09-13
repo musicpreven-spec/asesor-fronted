@@ -2,6 +2,8 @@
 const backendUrl = "https://asesor-backend.onrender.com/laws"; 
 // <-- cambia esto por la URL que Replit te dé (o deja vacío para usar solo la KB local: "")
 
+console.log("script.js cargado"); // para confirmar que el archivo corre
+
 // ---------- ELEMENTOS ----------
 const chatBox = document.getElementById("chat-box");
 const userInput = document.getElementById("user-input");
@@ -24,7 +26,51 @@ const letters = {
   "prorroga": "Estimado (a):\n\nSolicito prórroga por [motivo] y me comprometo a pagar a partir de [fecha]...\n\nAtentamente,\n[Nombre]",
   "no-propiedad": "A quien corresponda:\n\nHago constar que los bienes dentro del domicilio señalado no son propiedad del deudor, sino de terceros, por lo que solicito respetar su derecho de propiedad.\n\nAtentamente,\n[Nombre]"
 };
+// Función que crea un elemento 'details' (colapsable) por cada carta
+function crearCarta(titulo, texto) {
+  const details = document.createElement('details');
+  const summary = document.createElement('summary');
+  summary.textContent = titulo;
+  const p = document.createElement('p');
+  p.textContent = texto;
+  details.appendChild(summary);
+  details.appendChild(p);
+  details.classList.add('mi-carta');
+  return details;
+}
 
+// Renderiza cartas desde un array
+function renderizarCartas(cartas) {
+  const cont = document.getElementById('cardsContainer');
+  cont.innerHTML = ''; // limpiar
+  cartas.forEach(c => cont.appendChild(crearCarta(c.titulo, c.texto)));
+}
+
+// Si usas un JSON remoto (/laws), primero intenta traerlo; si falla, usa MIS_CARTAS
+async function cargarYCargarCartas() {
+  try {
+    // Cambia esta URL por la de tu backend en Render
+    const url = 'https://TU_BACKEND.onrender.com/laws';
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error('no response from backend');
+    const data = await resp.json();
+    // Suponiendo que data es un array de objetos con {titulo, texto}
+    if (Array.isArray(data) && data.length) {
+      renderizarCartas(data);
+      return;
+    }
+    // si no tiene estructura esperada, cae al fallback
+  } catch (err) {
+    console.warn('No se pudo traer /laws, uso cartas locales:', err);
+  }
+  // fallback local
+  renderizarCartas(MIS_CARTAS);
+}
+
+// Ejecutar al cargar el DOM
+document.addEventListener('DOMContentLoaded', () => {
+  cargarYCargarCartas();
+});
 // ---------- UTILIDADES UI ----------
 function addMessage(html, className="bot-message"){
   const msg = document.createElement("div");
@@ -140,6 +186,7 @@ userInput.addEventListener("keypress", function(e){
 window.addEventListener("load", () => {
   resetChat();
 });
+
 
 
 
