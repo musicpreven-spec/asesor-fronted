@@ -8,6 +8,7 @@
 </head>
 <body>
 <div class="chat-container">
+  <!-- Cabecera fija con asesor y botones -->
   <div class="chat-header">
     <div class="advisor-fixed">
       <img id="advisor-img" src="assets/advisor-happy.png" alt="Asesor virtual">
@@ -16,18 +17,21 @@
     <div class="quick-buttons">
       <button onclick="sendSuggestion('¿Qué hago si recibo una notificación de embargo?')">⚠️ Embargo</button>
       <button onclick="sendSuggestion('¿Pueden meterme a la cárcel por no pagar?')">🚫 Cárcel</button>
-      <button onclick="sendSuggestion('Cartas')">📄 Cartas</button>
+      <button onclick="showCards()">📄 Cartas</button>
     </div>
   </div>
 
+  <!-- Chat -->
   <div class="chat-box" id="chat-box"></div>
 
+  <!-- Entrada -->
   <div class="input-container">
     <input type="text" id="user-input" placeholder="Escribe tu mensaje aquí..." autocomplete="off" />
     <button id="send-btn">Enviar</button>
     <button id="reset-btn" class="reset">🔄 Reiniciar</button>
   </div>
 
+  <!-- Footer legal -->
   <div class="footer">
     ⚠️ Este asesor no sustituye a un abogado real.<br>
     📞 CONDUSEF: 55 5340 0999 | 800 999 8080<br>
