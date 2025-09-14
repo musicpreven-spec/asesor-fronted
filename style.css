@@ -41,7 +41,7 @@ body {
   width: 48px;
   height: 48px;
   image-rendering: pixelated;
-  animation: blink 4s infinite;
+  /* Eliminado: efecto de parpadeo */
 }
 
 .quick-buttons {
@@ -130,11 +130,6 @@ body {
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes blink {
-  0%, 90%, 100% { transform: scaleY(1); }
-  92%, 98% { transform: scaleY(0.1); }
 }
 
 /* Cartas estilizadas */
