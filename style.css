@@ -26,14 +26,17 @@ body {
   text-align: center;
 }
 
-.advisor {
-  text-align: center;
-  padding: 10px;
+/* ASESOR STICKY */
+.advisor.sticky {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   background: #f0f0f0;
   display: flex;
-  gap: 10px;
   align-items: center;
-  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
 }
 
 .advisor img {
@@ -42,13 +45,28 @@ body {
   image-rendering: pixelated;
 }
 
+.advisor-info {
+  flex: 1;
+}
+
 #advisor-status {
-  margin-top: 0;
+  margin: 0 0 6px 0;
   font-size: 0.95em;
   color: #333;
-  max-width: 260px;
-  text-align: left;
 }
+
+.quick-actions button {
+  margin: 2px;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  background: #25d366;
+  color: white;
+  cursor: pointer;
+  font-size: 0.85em;
+}
+
+.quick-actions button:hover { background: #128c7e; }
 
 .chat-box {
   flex: 1;
@@ -81,22 +99,18 @@ body {
   animation: fadeIn 0.25s ease-in;
 }
 
-.suggestions {
-  margin-top: 8px;
+/* Caja estilizada para cartas */
+.letter-box {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 10px;
+  font-family: "Times New Roman", serif;
+  white-space: pre-wrap;
+  text-align: left;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
-
-.suggestions button {
-  margin: 3px;
-  padding: 6px 10px;
-  border: none;
-  border-radius: 6px;
-  background: #25d366;
-  color: white;
-  cursor: pointer;
-  font-size: 0.9em;
-}
-
-.suggestions button:hover { background: #128c7e; }
 
 .input-container {
   display: flex;
@@ -128,12 +142,22 @@ body {
   color: #333;
 }
 
+.disclaimer {
+  margin-top: 8px;
+  font-size: 0.75em;
+  color: #666;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+/* Animación */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* make chat scroll nicely on small screens */
+/* Responsive */
 @media (max-width: 480px) {
   .chat-container { width: 95%; }
 }
+
