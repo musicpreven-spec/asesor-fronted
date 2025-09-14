@@ -1,6 +1,3 @@
-// ---------- CONFIG ----------
-// 👇 Cambia esta URL por la de tu backend en Render cuando lo tengas.
-// Ejemplo: "https://mi-backend.onrender.com/ask"
 const backendUrl = "https://asesor-backend.onrender.com"; 
 
 const chatBox = document.getElementById("chat-box");
@@ -14,14 +11,13 @@ const localResponses = {
   "embargo": "⚠️ Un embargo solo puede realizarse con una orden judicial...",
   "demanda": "⚖️ Si recibiste una demanda civil, lo ideal es acudir con un abogado...",
   "bienes": "🏠 Los bienes de terceros no pueden ser embargados sin prueba...",
-  "carcel": "🚫 En México no existe cárcel por deudas civiles...",
-  "cartas": "📄 Puedo darte modelos: convenio, prórroga, o carta de no propiedad."
+  "carcel": "🚫 En México no existe cárcel por deudas civiles..."
 };
 
 const letters = {
-  "convenio": "Estimado (a):\n\nPropongo un convenio de pago...",
-  "prorroga": "Estimado (a):\n\nSolicito prórroga por [motivo]...",
-  "no-propiedad": "A quien corresponda:\n\nHago constar que los bienes..."
+  "convenio": "📄 **Carta Convenio**\n\nEstimado (a):\n\nPropongo un convenio de pago...",
+  "prorroga": "📄 **Carta Prórroga**\n\nEstimado (a):\n\nSolicito prórroga por [motivo]...",
+  "no-propiedad": "📄 **Carta de No Propiedad**\n\nA quien corresponda:\n\nHago constar que los bienes..."
 };
 
 function addMessage(html, className="bot-message"){
@@ -77,7 +73,6 @@ async function sendMessage(){
   else if(low.includes("demanda")) found = localResponses.demanda;
   else if(low.includes("bien") || low.includes("tercero")) found = localResponses.bienes;
   else if(low.includes("carcel") || low.includes("cárcel") || low.includes("prisión")) found = localResponses.carcel;
-  else if(low.includes("carta") || low.includes("cartas")) found = localResponses.cartas;
 
   if(!found){
     setAdvisorMood("worried");
@@ -95,8 +90,14 @@ function sendSuggestion(text){
 
 function showLetter(type){
   const letter = letters[type] || "No encontré esa carta.";
-  addMessage(`<div class="letter-box">${escapeHtml(letter)}</div>`, "bot-message");
+  addMessage(`<div class="letter-box">${letter}</div>`, "bot-message");
   setAdvisorMood("happy");
+}
+
+function showAllLetters(){
+  showLetter("convenio");
+  showLetter("prorroga");
+  showLetter("no-propiedad");
 }
 
 function resetChat(){
