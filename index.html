@@ -2,58 +2,206 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Tú Asesor Virtual en Deudas Civiles</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Asesor Virtual en Deudas Civiles</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f6f9;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    header {
+      background: #2c3e50;
+      color: white;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      flex-wrap: wrap;
+    }
+
+    header img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      position: relative;
+    }
+
+    /* Animación de parpadeo */
+    .blink::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.1);
+      animation: blink 4s infinite;
+    }
+
+    @keyframes blink {
+      0%, 90%, 100% { height: 0; }
+      95% { height: 60px; }
+    }
+
+    .title {
+      flex-grow: 1;
+      text-align: center;
+    }
+
+    .disclaimer {
+      font-size: 12px;
+      font-style: italic;
+      color: #ecf0f1;
+      margin: 2px 0;
+    }
+
+    .contacts {
+      font-size: 12px;
+      color: #f1c40f;
+      margin: 2px 0;
+    }
+
+    .options {
+      display: flex;
+      gap: 5px;
+    }
+
+    .options button {
+      background: #3498db;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .chat {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+      overflow-y: auto;
+    }
+
+    .chat-message {
+      margin: 5px 0;
+      padding: 8px;
+      border-radius: 8px;
+      max-width: 70%;
+    }
+
+    .user-message {
+      background: #d1f7c4;
+      align-self: flex-end;
+    }
+
+    .bot-message {
+      background: #ecf0f1;
+      align-self: flex-start;
+    }
+
+    .input-area {
+      display: flex;
+      padding: 10px;
+      border-top: 1px solid #ccc;
+      background: white;
+    }
+
+    .input-area input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .input-area button {
+      margin-left: 10px;
+      padding: 10px 15px;
+      border: none;
+      background: #27ae60;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-  <div class="chat-container">
-
-    <!-- CABECERA -->
-    <div class="chat-header">🤝 Tú Asesor Virtual en Deudas Civiles</div>
-
-    <!-- ASESOR FIJO ARRIBA con parpadeo -->
-    <div class="advisor">
-      <div class="advisor-wrapper">
-        <img id="advisor-img" src="assets/advisor-happy.png" alt="Asesor virtual">
-        <div class="blink" aria-hidden="true"></div>
-      </div>
-
-      <div class="advisor-info">
-        <p id="advisor-status">🙂 Hola, soy tu asesor virtual. Estoy aquí para ayudarte.</p>
-        <div class="quick-actions">
-          <button onclick="sendSuggestion('¿Qué hago si recibo una notificación de embargo?')">⚠️ Embargo</button>
-          <button onclick="sendSuggestion('¿Pueden meterme a la cárcel por no pagar?')">🚫 Cárcel</button>
-          <button onclick="showAllLetters()">📄 Cartas</button>
-        </div>
-      </div>
+  <header>
+    <div class="blink">
+      <img src="assets/advisor-happy.png" alt="Asesor Virtual" />
     </div>
-
-    <!-- CAJA DE CHAT (solo esta scrollea) -->
-    <div id="chat-box" class="chat-box" role="log" aria-live="polite"></div>
-
-    <!-- INPUT -->
-    <div class="input-container">
-      <input type="text" id="user-input" placeholder="Escribe tu mensaje aquí..." autocomplete="off" />
-      <button id="send-btn">Enviar</button>
-      <button id="reset-btn" class="reset">🔄 Reiniciar</button>
+    <div class="title">
+      <h2>Tu Asesor Virtual en Deudas Civiles</h2>
+      <p class="disclaimer">Este asesor no sustituye a un abogado profesional.</p>
+      <p class="contacts">
+        📞 CONDUSEF: 55 5340 0999 <br />
+        📞 Asesoría gratuita CDMX (Locatel): 55 5658 1111
+      </p>
     </div>
-
-    <!-- FOOTER con contacto y DISCLAIMER -->
-    <div class="footer">
-      📞 CONDUSEF: 55 5340 0999 | 800 999 8080 <br>
-      ⚖️ Orientación jurídica gratuita: 800 824 4722
-      <div class="disclaimer" role="note">
-        ⚠️ Este asesor virtual ofrece <strong>orientación general</strong> y <strong>no sustituye la asesoría legal profesional de un abogado titulado</strong>.
-        Si necesitas ayuda legal concreta, busca asesoría profesional.
-      </div>
+    <div class="options">
+      <button onclick="showInfo('embargo')">Embargo</button>
+      <button onclick="showInfo('carcel')">Cárcel</button>
+      <button onclick="showInfo('cartas')">Cartas</button>
     </div>
+  </header>
 
+  <div class="chat" id="chat"></div>
+
+  <div class="input-area">
+    <input type="text" id="userInput" placeholder="Escribe tu consulta aquí..." />
+    <button onclick="sendMessage()">Enviar</button>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    const chat = document.getElementById('chat');
+    const userInput = document.getElementById('userInput');
+
+    function addMessage(text, sender) {
+      const msg = document.createElement('div');
+      msg.classList.add('chat-message', sender === 'user' ? 'user-message' : 'bot-message');
+      msg.textContent = text;
+      chat.appendChild(msg);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function sendMessage() {
+      const text = userInput.value.trim();
+      if (!text) return;
+      addMessage(text, 'user');
+      userInput.value = '';
+
+      // Simulación respuesta del asesor
+      setTimeout(() => {
+        addMessage("Estoy procesando tu consulta sobre: " + text, 'bot');
+      }, 500);
+    }
+
+    function showInfo(type) {
+      let response = '';
+      if (type === 'embargo') {
+        response = "El embargo es una medida judicial para asegurar el pago de una deuda...";
+      } else if (type === 'carcel') {
+        response = "En las deudas civiles no procede la cárcel, salvo casos de pensión alimenticia...";
+      } else if (type === 'cartas') {
+        response = "Aquí puedes acceder a los modelos de cartas que hemos preparado...";
+      }
+      addMessage(response, 'bot');
+    }
+  </script>
 </body>
 </html>
+
+
 
 
 
