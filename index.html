@@ -8,11 +8,17 @@
 </head>
 <body>
   <div class="chat-container">
+
+    <!-- CABECERA -->
     <div class="chat-header">🤝 Tú Asesor Virtual en Deudas Civiles</div>
 
-    <!-- ASESOR FIJO ARRIBA -->
+    <!-- ASESOR FIJO ARRIBA con parpadeo -->
     <div class="advisor sticky">
-      <img id="advisor-img" src="assets/advisor-happy.png" alt="Asesor virtual">
+      <div class="advisor-wrapper">
+        <img id="advisor-img" src="assets/advisor-happy.png" alt="Asesor virtual">
+        <div class="blink" aria-hidden="true"></div>
+      </div>
+
       <div class="advisor-info">
         <p id="advisor-status">🙂 Hola, soy tu asesor virtual. Estoy aquí para ayudarte.</p>
         <div class="quick-actions">
@@ -23,24 +29,30 @@
       </div>
     </div>
 
-    <div class="chat-box" id="chat-box"></div>
+    <!-- CAJA DE CHAT (mensajes) -->
+    <div id="chat-box" class="chat-box" role="log" aria-live="polite"></div>
 
+    <!-- INPUT -->
     <div class="input-container">
       <input type="text" id="user-input" placeholder="Escribe tu mensaje aquí..." autocomplete="off" />
       <button id="send-btn">Enviar</button>
       <button id="reset-btn" class="reset">🔄 Reiniciar</button>
     </div>
 
+    <!-- FOOTER con contacto y DISCLAIMER -->
     <div class="footer">
       📞 CONDUSEF: 55 5340 0999 | 800 999 8080 <br>
       ⚖️ Orientación jurídica gratuita: 800 824 4722
-      <div class="disclaimer">
-        ⚠️ Este asesor virtual ofrece orientación general y 
-        <strong>no sustituye la asesoría legal profesional</strong>.
+      <div class="disclaimer" role="note">
+        ⚠️ Este asesor virtual ofrece **orientación general** y <strong>no sustituye la asesoría legal profesional de un abogado titulado</strong>.
+        Si necesitas ayuda legal concreta, busca asesoría profesional.
       </div>
     </div>
+
   </div>
 
   <script src="script.js"></script>
 </body>
 </html>
+
+
