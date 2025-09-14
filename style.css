@@ -1,15 +1,6 @@
-body {
-  font-family: Arial, sans-serif;
-  background-color: #ece5dd;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-}
-
 .chat-container {
   width: 420px;
+  height: 90vh;   /* <--- ahora todo el contenedor usa altura fija */
   background: #ffffff;
   border-radius: 12px;
   overflow: hidden;
@@ -18,19 +9,8 @@ body {
   flex-direction: column;
 }
 
-.chat-header {
-  background: #075e54;
-  color: white;
-  padding: 12px;
-  font-weight: bold;
-  text-align: center;
-}
-
-/* ASESOR STICKY */
-.advisor.sticky {
-  position: sticky;
-  top: 0;
-  z-index: 10;
+/* Asesor fijo en la parte superior */
+.advisor {
   background: #f0f0f0;
   display: flex;
   align-items: center;
@@ -39,64 +19,13 @@ body {
   border-bottom: 1px solid #ddd;
 }
 
-.advisor img {
-  width: 64px;
-  height: 64px;
-  image-rendering: pixelated;
-}
-
-.advisor-info {
-  flex: 1;
-}
-
-#advisor-status {
-  margin: 0 0 6px 0;
-  font-size: 0.95em;
-  color: #333;
-}
-
-.quick-actions button {
-  margin: 2px;
-  padding: 6px 10px;
-  border: none;
-  border-radius: 6px;
-  background: #25d366;
-  color: white;
-  cursor: pointer;
-  font-size: 0.85em;
-}
-
-.quick-actions button:hover { background: #128c7e; }
-
 .chat-box {
   flex: 1;
   padding: 12px;
-  overflow-y: auto;
+  overflow-y: auto;   /* <--- solo esta parte hace scroll */
   background: #fefefe;
   display: flex;
   flex-direction: column;
-}
-
-.bot-message, .user-message {
-  margin: 8px 0;
-  padding: 10px;
-  border-radius: 8px;
-  max-width: 80%;
-  line-height: 1.4;
-  word-wrap: break-word;
-}
-
-.bot-message {
-  background: #dcf8c6;
-  align-self: flex-start;
-  animation: fadeIn 0.25s ease-in;
-}
-
-.user-message {
-  background: #ece5dd;
-  align-self: flex-end;
-  text-align: right;
-  animation: fadeIn 0.25s ease-in;
 }
 
 /* Caja estilizada para cartas */
@@ -104,60 +33,12 @@ body {
   background: #fff;
   border: 1px solid #ccc;
   border-radius: 8px;
-  padding: 12px;
+  padding: 16px;
   margin-top: 10px;
   font-family: "Times New Roman", serif;
   white-space: pre-wrap;
   text-align: left;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  font-size: 0.95em;
+  line-height: 1.6;
 }
-
-.input-container {
-  display: flex;
-  border-top: 1px solid #ddd;
-}
-
-.input-container input {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  outline: none;
-}
-
-.input-container button {
-  padding: 10px;
-  background: #25d366;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-.input-container .reset { background: #ff6b6b; }
-
-.footer {
-  padding: 8px;
-  background: #f0f0f0;
-  font-size: 0.85em;
-  text-align: center;
-  color: #333;
-}
-
-.disclaimer {
-  margin-top: 8px;
-  font-size: 0.75em;
-  color: #666;
-  line-height: 1.4;
-  font-style: italic;
-}
-
-/* Animación */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Responsive */
-@media (max-width: 480px) {
-  .chat-container { width: 95%; }
-}
-
