@@ -1,6 +1,15 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #ece5dd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
 .chat-container {
   width: 420px;
-  height: 90vh;   /* <--- ahora todo el contenedor usa altura fija */
   background: #ffffff;
   border-radius: 12px;
   overflow: hidden;
@@ -9,36 +18,137 @@
   flex-direction: column;
 }
 
-/* Asesor fijo en la parte superior */
-.advisor {
-  background: #f0f0f0;
+.chat-header {
+  background: #075e54;
+  color: white;
+  padding: 10px;
+  font-weight: bold;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.advisor-fixed {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+}
+
+.advisor-fixed img {
+  width: 48px;
+  height: 48px;
+  image-rendering: pixelated;
+  animation: blink 4s infinite;
+}
+
+.quick-buttons {
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.quick-buttons button {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  background: #25d366;
+  color: white;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.quick-buttons button:hover {
+  background: #128c7e;
 }
 
 .chat-box {
   flex: 1;
   padding: 12px;
-  overflow-y: auto;   /* <--- solo esta parte hace scroll */
+  overflow-y: auto;
   background: #fefefe;
   display: flex;
   flex-direction: column;
 }
 
-/* Caja estilizada para cartas */
-.letter-box {
-  background: #fff;
-  border: 1px solid #ccc;
+.bot-message, .user-message {
+  margin: 8px 0;
+  padding: 10px;
   border-radius: 8px;
-  padding: 16px;
-  margin-top: 10px;
-  font-family: "Times New Roman", serif;
+  max-width: 80%;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+.bot-message {
+  background: #dcf8c6;
+  align-self: flex-start;
+  animation: fadeIn 0.25s ease-in;
+}
+
+.user-message {
+  background: #ece5dd;
+  align-self: flex-end;
+  text-align: right;
+  animation: fadeIn 0.25s ease-in;
+}
+
+.input-container {
+  display: flex;
+  border-top: 1px solid #ddd;
+}
+
+.input-container input {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  outline: none;
+}
+
+.input-container button {
+  padding: 10px;
+  background: #25d366;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.input-container .reset {
+  background: #ff6b6b;
+}
+
+.footer {
+  padding: 8px;
+  background: #f0f0f0;
+  font-size: 0.85em;
+  text-align: center;
+  color: #333;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes blink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  92%, 98% { transform: scaleY(0.1); }
+}
+
+/* Cartas estilizadas */
+.letter {
+  background: #f8f9fa;
+  border-left: 4px solid #075e54;
+  padding: 10px;
+  margin: 8px 0;
+  font-family: 'Times New Roman', serif;
   white-space: pre-wrap;
-  text-align: left;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  font-size: 0.95em;
-  line-height: 1.6;
+  line-height: 1.4;
+}
+
+/* Small screens */
+@media (max-width: 480px) {
+  .chat-container { width: 95%; }
+  .quick-buttons { flex-direction: column; gap: 5px; }
 }
