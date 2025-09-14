@@ -10,9 +10,17 @@
   <div class="chat-container">
     <div class="chat-header">🤝 Tú Asesor Virtual en Deudas Civiles</div>
 
-    <div class="advisor">
+    <!-- ASESOR FIJO ARRIBA -->
+    <div class="advisor sticky">
       <img id="advisor-img" src="assets/advisor-happy.png" alt="Asesor virtual">
-      <p id="advisor-status">🙂 Hola, soy tu asesor virtual. Estoy aquí para ayudarte.</p>
+      <div class="advisor-info">
+        <p id="advisor-status">🙂 Hola, soy tu asesor virtual. Estoy aquí para ayudarte.</p>
+        <div class="quick-actions">
+          <button onclick="sendSuggestion('¿Qué hago si recibo una notificación de embargo?')">⚠️ Embargo</button>
+          <button onclick="sendSuggestion('¿Pueden meterme a la cárcel por no pagar?')">🚫 Cárcel</button>
+          <button onclick="sendSuggestion('Cartas')">📄 Cartas</button>
+        </div>
+      </div>
     </div>
 
     <div class="chat-box" id="chat-box"></div>
@@ -26,10 +34,13 @@
     <div class="footer">
       📞 CONDUSEF: 55 5340 0999 | 800 999 8080 <br>
       ⚖️ Orientación jurídica gratuita: 800 824 4722
+      <div class="disclaimer">
+        ⚠️ Este asesor virtual ofrece orientación general y 
+        <strong>no sustituye la asesoría legal profesional</strong>.
+      </div>
     </div>
   </div>
 
   <script src="script.js"></script>
 </body>
 </html>
-
